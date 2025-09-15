@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI StudyFlux Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>  
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCmwZH5Z5PlFO5ZCQA53mOA4jGTt3fzT40",
+      authDomain: "ai-studyflux.firebaseapp.com",
+      projectId: "ai-studyflux",
+      storageBucket: "ai-studyflux.firebasestorage.app",
+      messagingSenderId: "1058682681564",
+      appId: "1:1058682681564:web:dc1c7644a87308383b5c19"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="brand">AI StudyFlux</div>
+    <div class="profile">
+      <img src="assets/avatar.png" alt="Profile" />
+      <div>
+        <div class="name">Sarah Chen</div>
+        <div class="level">Level 2 Student</div>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="active"><a href="#" onclick="loadPage('dashboard-content.html', this)">Dashboard</a></li>
+      <li><a href="#" onclick="loadPage('qa.html', this)">Ask Question</a></li>
+      <li><a href="#" onclick="loadPage('quiz.html', this)">Quiz</a></li>
+      <li><a href="#" onclick="loadPage('results.html', this)">Results</a></li>
+      <li><a href="#" onclick="loadPage('settings.html', this)">Settings</a></li>
+    </ul>
+  </div>
+  <div class="main-content">
+    <iframe id="main-iframe" src="dashboard-content.html" style="width:100%;height:80vh;border:none;border-radius:16px;background:#202940; margin-top:2em;"></iframe>
+    <div class="header"></div>
+  </div>
+
+  <script>
+    function loadPage(page, el) {
+      document.getElementById('main-iframe').src = page;
+      // Sidebar highlighting
+      var menuItems = document.querySelectorAll('.menu li');
+      menuItems.forEach(item => item.classList.remove('active'));
+      el.parentElement.classList.add('active');
+    }
+
+    const auth = firebase.auth();
+
+    // Redirect to login if not authenticated
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = 'login.html';
+      }
+    });
+  </script>
+</body>
+</html>
