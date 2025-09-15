@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI StudyFlux - Quiz</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #192234;
+      color: #fff;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+    main {
+      background: #232e45;
+      padding: 2rem 2.5rem;
+      border-radius: 14px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 12px 30px #06b6d4aa;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    label, select {
+      font-size: 1.1rem;
+      color: #bfcaff;
+      font-weight: 600;
+    }
+    select {
+      margin-top: 0.5rem;
+      padding: 0.8rem;
+      border-radius: 10px;
+      border: none;
+      background: #1a2036;
+      color: #fff;
+      box-shadow: inset 0 0 8px #0008;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .btn {
+      background: #52a9f3;
+      color: white;
+      text-align: center;
+      padding: 0.85rem 0;
+      border-radius: 14px;
+      box-shadow: 0 6px 18px #06b6d4cc;
+      font-weight: 700;
+      font-size: 1.1rem;
+      user-select: none;
+      cursor: pointer;
+      border: none;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btn:hover {
+      background: #31a3ff;
+      transform: translateY(-3px);
+      box-shadow: 0 9px 28px #31a3ffbb;
+    }
+    #message {
+      min-height: 18px;
+      margin-bottom: 1rem;
+    }
+    #quiz-container {
+      background: #1f2a47;
+      border-radius: 12px;
+      padding: 1rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .question-block {
+      margin-bottom: 1rem;
+    }
+    .results {
+      margin-top: 1rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .correct {
+      color: #7cfc00;
+    }
+    .wrong {
+      color: #ff6347;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <label for="num-questions">Number of Questions:</label>
+    <select id="num-questions" aria-label="Number of Questions">
+      <option value="5">5 Questions</option>
+      <option value="10">10 Questions</option>
+      <option value="20">20 Questions</option>
+    </select>
+    <div id="message"></div>
+    <button id="generateQuizBtn" class="btn">Generate Quiz</button>
+
+    <div id="quiz-container"></div>
+
+    <button id="submitQuizBtn" class="btn" style="display:none; margin-top: 1rem;">Submit Quiz</button>
+    <div id="results" class="results"></div>
+  </main>
+
+  <script>
+    const generateBtn = document.getElementById('generateQuizBtn');
+    const numQuestions = document.getElementById('num-questions');
+    const messageDiv = document.getElementById('message');
+    const quizContainer = document.getElementById('quiz-container');
+    const submitBtn = document.getElementById('submitQuizBtn');
+    const resultsDiv = document.getElementById('results');
+
+    let currentQuiz = [];
+    const token = "YOUR_JWT_TOKEN_HERE"; // Replace with real JWT token
+
+    generateBtn.addEventListener('click', async () => {
+      messageDiv.textContent = "";
+      resultsDiv.innerHTML = "";
+      quizContainer.innerHTML = "";
+      submitBtn.style.display = "none";
+      generateBtn.disabled = true;
+      generateBtn.textContent = "Generating...";
+
+      try {
+        const res = await fetch("http://localhost:5000/api/quiz", {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({ notesId: "my-notes-123" }), // Set your notesId dynamically
+        });
+        if (!res.ok) throw new Error(`Error ${res.status}`);
+
+        currentQuiz = await res.json();
+        messageDiv.style.color = "lightgreen";
+        messageDiv.textContent = "Quiz generated!";
+
+        renderQuiz(currentQuiz);
+        submitBtn.style.display = "block";
+      } catch (err) {
+        messageDiv.style.color = "red";
+        messageDiv.textContent = "Error generating quiz: " + err.message;
+      } finally {
+        generateBtn.disabled = false;
+        generateBtn.textContent = "Generate Quiz";
+      }
+    });
+
+    function renderQuiz(quiz) {
+      quizContainer.innerHTML = "";
+      quiz.forEach((q, idx) => {
+        const block = document.createElement('div');
+        block.className = "question-block";
+
+        let html = `<p><strong>Q${idx + 1}:</strong> ${q.question}</p>`;
+        q.choices.forEach((choice, cIdx) => {
+          const inputId = `q${idx}_choice${cIdx}`;
+          html += `
+            <label for="${inputId}">
+              <input type="radio" name="q${idx}" id="${inputId}" value="${choice}" />
+              ${choice}
+            </label><br/>
+          `;
+        });
+
+        block.innerHTML = html;
+        quizContainer.appendChild(block);
+      });
+    }
+
+    submitBtn.addEventListener('click', async () => {
+      resultsDiv.innerHTML = "";
+      const userAnswers = currentQuiz.map((_, idx) => {
+        const checked = document.querySelector(`input[name="q${idx}"]:checked`);
+        return checked ? checked.value : null;
+      });
+
+      if (userAnswers.includes(null)) {
+        messageDiv.style.color = "red";
+        messageDiv.textContent = "Please answer all questions before submitting.";
+        return;
+      }
+
+      messageDiv.textContent = "";
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting...";
+
+      try {
+        const res = await fetch("http://localhost:5000/api/quiz-evaluate", {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({ quiz: currentQuiz, userAnswers })
+        });
+        if (!res.ok) throw new Error(`Error ${res.status}`);
+
+        const evaluation = await res.json();
+        displayResults(evaluation);
+      } catch (err) {
+        messageDiv.style.color = "red";
+        messageDiv.textContent = "Error submitting quiz: " + err.message;
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit Quiz";
+      }
+    });
+
+    function displayResults(evaluation) {
+      resultsDiv.innerHTML = "<h3>Results:</h3>";
+      evaluation.forEach(({ questionIndex, isCorrect, explanation }) => {
+        const p = document.createElement("p");
+        p.innerHTML = `
+          Question ${questionIndex + 1}: <strong class="${isCorrect ? 'correct' : 'wrong'}">${isCorrect ? 'Correct' : 'Wrong'}</strong><br/>
+          Explanation: ${explanation}
+        `;
+        resultsDiv.appendChild(p);
+      });
+    }
+  </script>
+</body>
+</html>

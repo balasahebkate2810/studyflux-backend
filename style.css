@@ -1,0 +1,130 @@
+body {
+  background: #232e45;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  margin: 0;
+}
+
+.sidebar {
+  width: 260px;
+  background: #1c2232;
+  padding: 2em 1em;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+.brand {
+  font-size: 2em;
+  font-weight: bold;
+  margin-bottom: 1.5em;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2em;
+}
+
+.profile img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  margin-right: 1em;
+}
+
+.name { font-weight: bold; }
+
+.level { font-size: 0.9em; color: #bfcaff; }
+
+.menu {
+  list-style: none;
+  padding: 0;
+}
+
+.menu li {
+  padding: 0.7em 1em;
+  margin: 0.5em 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Add these styles for sidebar links */
+.menu a {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0.7em 0;
+}
+
+.menu li.active a {
+  font-weight: bold;
+  color: #52a9f3;
+}
+
+.menu a:hover {
+  text-decoration: underline;
+}
+
+.menu .active,
+.menu li:hover {
+  background: #263154;
+  color: #52a9f3;
+}
+
+.main-content { flex: 1; padding: 2em; }
+
+.header h2 { font-size: 1.8em; margin-top: 0; margin-bottom: 0.2em; }
+
+.header p { color: #bfcaff; margin: 0 0 2em 0; }
+
+.status-cards {
+  display: flex;
+  gap: 1.5em;
+  margin-bottom: 2em;
+}
+
+.card {
+  background: #202940;
+  border-radius: 16px;
+  padding: 1.5em;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card div { font-size: 2em; font-weight: bold; margin-bottom: 0.2em; }
+
+.card p { margin: 0 0 0.5em 0; color: #bfcaff; }
+
+.dashboard-lower { display: flex; gap: 2em; }
+
+.study-progress,
+.recommendations {
+  background: #202940;
+  border-radius: 16px;
+  flex: 1;
+  padding: 1.5em;
+  display: flex;
+  flex-direction: column;
+}
+
+.study-progress h3,
+.recommendations h3 { margin-top: 0; margin-bottom: 1em; }
+
+.recommendation {
+  background: #263154;
+  border-radius: 8px;
+  padding: 1em;
+  margin-bottom: 0.8em;
+  font-size: 1em;
+}
+
+.recommendation strong {
+  color: #52a9f3;
+  display: block;
+  margin-bottom: 0.3em;
+}

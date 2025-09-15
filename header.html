@@ -1,0 +1,36 @@
+<header style="
+  background: #232e45;
+  max-width: 960px;
+  width: 100%;
+  padding: 0.8rem 2rem;
+  margin: 0 auto 2.5rem auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #52a9f3;
+  font-weight: 700;
+  border-radius: 14px 14px 0 0;
+  box-shadow: none;
+  position: relative;
+  z-index: 10;
+  box-sizing: border-box;
+">
+  <div style="font-size: 1.7rem; font-family: 'Poppins', sans-serif; letter-spacing: 1px;">
+    AI StudyFlux
+  </div>
+</header>
+
+<script type="module">
+  import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  const auth = getAuth();
+
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    try {
+      await signOut(auth);
+      alert("Logged out successfully.");
+      window.location.href = "login.html";
+    } catch (error) {
+      alert("Error logging out: " + error.message);
+    }
+  });
+</script>

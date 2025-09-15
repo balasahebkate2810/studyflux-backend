@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI StudyFlux - Quiz Results</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #192234;
+      color: #fff;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+    main {
+      background: #232e45;
+      padding: 2rem 2.5rem;
+      border-radius: 14px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 12px 30px #06b6d4aa;
+    }
+    .score-circle {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 1.5rem auto;
+      border-radius: 50%;
+      background: linear-gradient(90deg, #52a9f3 0%, #06b6d4 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.8rem;
+      font-weight: 700;
+      box-shadow: 0 8px 16px #06b6d4cc;
+      color: #161d2d;
+      user-select: none;
+    }
+    p {
+      font-size: 1.2rem;
+      margin: 0 0 1.8rem 0;
+    }
+    .result-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1.6rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background: #52a9f3;
+      color: white;
+      padding: 0.9rem 2rem;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 6px 18px #06b6d4cc;
+      transition: background 0.3s ease, transform 0.2s ease;
+      user-select: none;
+      border: none;
+      display: inline-block;
+      text-align: center;
+      line-height: normal;
+    }
+    .btn:hover {
+      background: #31a3ff;
+      transform: translateY(-3px);
+      box-shadow: 0 9px 28px #31a3ffbb;
+    }
+    #message {
+      margin-bottom: 1rem;
+      min-height: 18px;
+      color: red;
+    }
+    footer {
+      margin-top: auto;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #b3c0f7;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <main>
+    <div class="score-circle" id="scoreCircle">80%</div>
+    <p id="resultText">Great job! You got <strong>8/10</strong> correct 🎉</p>
+    <div id="message"></div>
+    <div class="result-buttons">
+      <button class="btn" id="tryAgainBtn">Try Again</button>
+      <button class="btn" id="backHomeBtn">Back to Home</button>
+    </div>
+  </main>
+
+  <footer>
+    Keep Learning with AI StudyFlux 🚀
+  </footer>
+
+  <script type="module" src="auth-state.js"></script>
+  <script type="module">
+    async function loadHeader() {
+      const response = await fetch('header.html');
+      const html = await response.text();
+      document.getElementById('header-placeholder').innerHTML = html;
+    }
+    loadHeader();
+
+    // Example event listeners for buttons
+    document.getElementById("tryAgainBtn").addEventListener("click", () => {
+      window.location.href = "quiz.html";
+    });
+    document.getElementById("backHomeBtn").addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+
+    // Placeholder for dynamically setting score and messages, e.g.,
+    // let scorePercent = 80;
+    // document.getElementById("scoreCircle").textContent = scorePercent + '%';
+    // document.getElementById("resultText").innerHTML = `Great job! You got <strong>8/10</strong> correct 🎉`;
+  </script>
+</body>
+</html>
