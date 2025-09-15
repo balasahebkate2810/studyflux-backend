@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI StudyFlux - Sign Up</title>
+  <style>
+    body {
+      margin: 0; background: #192234; color: #fff;
+      font-family: Poppins, sans-serif;
+      display: flex; justify-content: center; align-items: center;
+      height: 100vh; padding: 1rem;
+      box-sizing: border-box;
+    }
+    .auth-container {
+      width: 100%;
+      max-width: 400px;
+      background: #232e45;
+      border-radius: 20px;
+      box-shadow: 0 0 40px #06b6d470;
+      box-sizing: border-box;
+    }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      border-bottom: 1px solid #52a9f3;
+    }
+    .tab {
+      flex: 1;
+      padding: 1rem;
+      text-align: center;
+      font-weight: 700;
+      color: #52a9f3;
+      user-select: none;
+    }
+    form {
+      padding: 2rem 2rem 1rem;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    h2 {
+      color: #52a9f3;
+      margin-bottom: 1.5rem;
+      font-weight: 800;
+    }
+    .input-wrap {
+      position: relative;
+      margin-bottom: 1.2rem;
+      text-align: left;
+      width: 100%;
+    }
+    .input-wrap span {
+      position: absolute;
+      top: 50%;
+      left: 14px;
+      transform: translateY(-50%);
+      color: #52a9f3;
+      font-size: 1.3rem;
+      pointer-events: none;
+    }
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 0.8rem 1rem 0.8rem 2.8rem;
+      border-radius: 10px;
+      border: none;
+      background: #1a2036;
+      color: #fff;
+      font-size: 1rem;
+      box-shadow: 0 2px 12px #52a9f345;
+      display: block;
+    }
+    input:focus {
+      outline: 2px solid #52a9f3;
+      box-shadow: 0 0 10px #52a9f3;
+    }
+    button {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(90deg, #52a9f3 40%, #06b6d4 100%);
+      color: white; font-weight: 700; font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin: 0.5rem 0 1rem;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #06b6d4 40%, #52a9f3 100%);
+    }
+    p {
+      margin-top: 0.5rem; font-size: 1rem; color: #bfcaff;
+    }
+    p a {
+      color: #52a9f3; font-weight: 600; text-decoration: none;
+    }
+    p a:hover {
+      text-decoration: underline;
+    }
+    #signupMessage {
+      color: red;
+      margin-bottom: 1rem;
+      min-height: 18px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="tabs">
+      <div class="tab active">Sign Up</div>
+    </div>
+
+    <!-- Signup Form -->
+    <form id="signupForm">
+      <h2>Create Your Account</h2>
+      <div id="signupMessage"></div>
+
+      <div class="input-wrap">
+        <span>✉</span>
+        <input type="email" id="signupEmailInput" placeholder="your.email@example.com" required />
+      </div>
+      <div class="input-wrap">
+        <span>🔒</span>
+        <input type="password" id="signupPasswordInput" placeholder="Enter a password" required />
+      </div>
+      <div class="input-wrap">
+        <span>🔒</span>
+        <input type="password" id="confirmPasswordInput" placeholder="Confirm your password" required />
+      </div>
+      <button type="submit">Sign Up</button>
+      <p>Already have an account? <a href="login.html">Log in here</a></p>
+    </form>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCmwZH5Z5PlFO5ZCQA53mOA4jGTt3fzT40",
+      authDomain: "ai-studyflux.firebaseapp.com",
+      projectId: "ai-studyflux",
+      storageBucket: "ai-studyflux.firebasestorage.app",
+      messagingSenderId: "1058682681564",
+      appId: "1:1058682681564:web:dc1c7644a87308383b5c19"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const signupForm = document.getElementById("signupForm");
+    const signupMessageDiv = document.getElementById("signupMessage");
+
+    signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      signupMessageDiv.textContent = "";
+
+      const email = document.getElementById("signupEmailInput").value.trim();
+      const password = document.getElementById("signupPasswordInput").value;
+      const confirmPassword = document.getElementById("confirmPasswordInput").value;
+
+      if (!email || !password || !confirmPassword) {
+        signupMessageDiv.style.color = "red";
+        signupMessageDiv.textContent = "Please fill in all fields.";
+        return;
+      }
+      if (password !== confirmPassword) {
+        signupMessageDiv.style.color = "red";
+        signupMessageDiv.textContent = "Passwords do not match.";
+        return;
+      }
+
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        signupMessageDiv.style.color = "lightgreen";
+        signupMessageDiv.textContent = "Signup successful! Redirecting to login...";
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 2000);
+      } catch (error) {
+        signupMessageDiv.style.color = "red";
+        signupMessageDiv.textContent = "Error: " + error.message;
+      }
+    });
+  </script>
+</body>
+</html>
